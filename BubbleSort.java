@@ -8,7 +8,7 @@ public class BubbleSort {
         }
         System.out.println();
     }
-    // An optimized version of Bubble Sort
+
   public  void bubbleSort(int arr[])
     {   int n = arr.length;
         boolean isSwapped;
