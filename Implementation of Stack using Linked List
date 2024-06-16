@@ -1,0 +1,87 @@
+class Node {
+    int data;
+    Node next;
+
+    public Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class Stack {
+    Node top;
+
+    public Stack() {
+        this.top = null;
+    }
+
+    public void push(int data) {
+        Node newNode = new Node(data);
+        if (top == null) {
+            top = newNode;
+        } else {
+            newNode.next = top;
+            top = newNode;
+        }
+    }
+
+    public void pop() {
+        if (top == null) {
+            System.out.println("Stack is empty.");
+            return;
+        }
+        Node temp = top;
+        top = top.next;
+        temp.next = null; // Disconnecting the popped node
+    }
+
+    public void display() {
+        Node temp = top;
+        System.out.print("Stack: ");
+        while (temp != null) {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
+        }
+        System.out.println();
+    }
+
+    public int peek() {
+        if (top == null) {
+            System.out.println("Stack is empty.");
+            return -1; // Return some default value or throw an exception
+        }
+        return top.data;
+    }
+
+    public boolean isEmpty() {
+        return top == null;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Stack stack = new Stack();
+
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+
+        stack.display(); // Stack: 3 2 1
+
+        System.out.println("Peek: " + stack.peek()); // Peek: 3
+
+        stack.pop();
+
+        stack.display(); // Stack: 2 1
+
+        System.out.println("Is stack empty? " + stack.isEmpty()); // Is stack empty? false
+
+        stack.pop();
+        stack.pop();
+        stack.pop(); // Trying to pop more elements than present
+
+        stack.display(); // Stack: (empty)
+
+        System.out.println("Is stack empty? " + stack.isEmpty()); // Is stack empty? true
+    }
+}
