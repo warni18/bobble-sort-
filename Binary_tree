@@ -1,112 +1,168 @@
-class Node:
-    def __init__(self, key):
-        self.left = None
-        self.right = None
-        self.val = key
+// Node class
+class Node {
+    int key;
+    Node left, right;
 
-class BinaryTree:
-    def __init__(self):
-        self.root = None
+    public Node(int item) {
+        key = item;
+        left = right = null;
+    }
+}
 
-    def insert(self, key):
-        if self.root is None:
-            self.root = Node(key)
-        else:
-            self._insert(self.root, key)
+// Binary Search Tree class
+class BinarySearchTree {
+    Node root;
 
-    def _insert(self, root, key):
-        if key < root.val:
-            if root.left is None:
-                root.left = Node(key)
-            else:
-                self._insert(root.left, key)
-        else:
-            if root.right is None:
-                root.right = Node(key)
-            else:
-                self._insert(root.right, key)
+    public BinarySearchTree() {
+        root = null;
+    }
 
-    def delete(self, key):
-        self.root = self._delete(self.root, key)
+    // Insertion operation
+    void insert(int key) {
+        root = insertRec(root, key);
+    }
 
-    def _delete(self, root, key):
-        if root is None:
-            return root
+    Node insertRec(Node root, int key) {
+        if (root == null) {
+            root = new Node(key);
+            return root;
+        }
 
-        if key < root.val:
-            root.left = self._delete(root.left, key)
-        elif key > root.val:
-            root.right = self._delete(root.right, key)
-        else:
-            if root.left is None:
-                return root.right
-            elif root.right is None:
-                return root.left
+        if (key < root.key)
+            root.left = insertRec(root.left, key);
+        else if (key > root.key)
+            root.right = insertRec(root.right, key);
 
-            temp_val = self._min_value_node(root.right)
-            root.val = temp_val.val
-            root.right = self._delete(root.right, temp_val.val)
-        
-        return root
+        return root;
+    }
 
-    def _min_value_node(self, node):
-        current = node
-        while current.left is not None:
-            current = current.left
-        return current
+    // Deletion operation
+    void delete(int key) {
+        root = deleteRec(root, key);
+    }
 
-    def inorder_traversal(self):
-        res = []
-        self._inorder_traversal(self.root, res)
-        return res
+    Node deleteRec(Node root, int key) {
+        if (root == null)
+            return root;
 
-    def _inorder_traversal(self, root, res):
-        if root:
-            self._inorder_traversal(root.left, res)
-            res.append(root.val)
-            self._inorder_traversal(root.right, res)
+        if (key < root.key)
+            root.left = deleteRec(root.left, key);
+        else if (key > root.key)
+            root.right = deleteRec(root.right, key);
+        else {
+            if (root.left == null)
+                return root.right;
+            else if (root.right == null)
+                return root.left;
 
-    def preorder_traversal(self):
-        res = []
-        self._preorder_traversal(self.root, res)
-        return res
+            root.key = minValue(root.right);
 
-    def _preorder_traversal(self, root, res):
-        if root:
-            res.append(root.val)
-            self._preorder_traversal(root.left, res)
-            self._preorder_traversal(root.right, res)
+            root.right = deleteRec(root.right, root.key);
+        }
 
-    def postorder_traversal(self):
-        res = []
-        self._postorder_traversal(self.root, res)
-        return res
+        return root;
+    }
 
-    def _postorder_traversal(self, root, res):
-        if root:
-            self._postorder_traversal(root.left, res)
-            self._postorder_traversal(root.right, res)
-            res.append(root.val)
+    int minValue(Node root) {
+        int minv = root.key;
+        while (root.left != null) {
+            minv = root.left.key;
+            root = root.left;
+        }
+        return minv;
+    }
 
-# Example usage:
-bt = BinaryTree()
-bt.insert(50)
-bt.insert(30)
-bt.insert(20)
-bt.insert(40)
-bt.insert(70)
-bt.insert(60)
-bt.insert(80)
+    // Search operation
+    boolean search(int key) {
+        return searchRec(root, key);
+    }
 
-print("Inorder traversal:", bt.inorder_traversal())
-print("Preorder traversal:", bt.preorder_traversal())
-print("Postorder traversal:", bt.postorder_traversal())
+    boolean searchRec(Node root, int key) {
+        if (root == null)
+            return false;
+        if (root.key == key)
+            return true;
+        if (root.key < key)
+            return searchRec(root.right, key);
+        return searchRec(root.left, key);
+    }
 
-bt.delete(20)
-print("Inorder traversal after deleting 20:", bt.inorder_traversal())
+    // Inorder traversal
+    void inorder() {
+        inorderRec(root);
+        System.out.println();
+    }
 
-bt.delete(30)
-print("Inorder traversal after deleting 30:", bt.inorder_traversal())
+    void inorderRec(Node root) {
+        if (root != null) {
+            inorderRec(root.left);
+            System.out.print(root.key + " ");
+            inorderRec(root.right);
+        }
+    }
 
-bt.delete(50)
-print("Inorder traversal after deleting 50:", bt.inorder_traversal())
+    // Preorder traversal
+    void preorder() {
+        preorderRec(root);
+        System.out.println();
+    }
+
+    void preorderRec(Node root) {
+        if (root != null) {
+            System.out.print(root.key + " ");
+            preorderRec(root.left);
+            preorderRec(root.right);
+        }
+    }
+
+    // Postorder traversal
+    void postorder() {
+        postorderRec(root);
+        System.out.println();
+    }
+
+    void postorderRec(Node root) {
+        if (root != null) {
+            postorderRec(root.left);
+            postorderRec(root.right);
+            System.out.print(root.key + " ");
+        }
+    }
+}
+
+// Driver class to test the BinarySearchTree
+public class Main {
+    public static void main(String[] args) {
+        BinarySearchTree tree = new BinarySearchTree();
+
+        // Inserting elements into the tree
+        tree.insert(50);
+        tree.insert(30);
+        tree.insert(20);
+        tree.insert(40);
+        tree.insert(70);
+        tree.insert(60);
+        tree.insert(80);
+
+        // Displaying the tree's inorder traversal
+        System.out.println("Inorder traversal:");
+        tree.inorder();
+
+        // Deleting an element
+        tree.delete(20);
+        System.out.println("Inorder traversal after deleting 20:");
+        tree.inorder();
+
+        // Searching for an element
+        int searchKey = 70;
+        System.out.println("Is " + searchKey + " present in the tree? " + tree.search(searchKey));
+
+        // Displaying the tree's preorder traversal
+        System.out.println("Preorder traversal:");
+        tree.preorder();
+
+        // Displaying the tree's postorder traversal
+        System.out.println("Postorder traversal:");
+        tree.postorder();
+    }
+}
